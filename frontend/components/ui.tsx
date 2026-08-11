@@ -1,0 +1,19 @@
+"use client";
+
+import { AlertTriangle, ArrowUpRight, Check, Inbox, LoaderCircle, RefreshCw } from "lucide-react";
+import type { ReactNode } from "react";
+
+export function PageHeader({ eyebrow, title, description, actions }: { eyebrow?: string; title: string; description: string; actions?: ReactNode }) { return <header className="page-header"><div>{eyebrow && <div className="eyebrow">{eyebrow}</div>}<h1>{title}</h1><p>{description}</p></div>{actions && <div className="header-actions">{actions}</div>}</header>; }
+export function Panel({ title, hint, action, children, className = "" }: { title?: string; hint?: string; action?: ReactNode; children: ReactNode; className?: string }) { return <section className={`panel ${className}`}>{(title || action) && <div className="panel-head"><div><h2>{title}</h2>{hint && <p>{hint}</p>}</div>{action}</div>}{children}</section>; }
+export function Status({ value }: { value: string }) { const tone = ["ready", "healthy", "published", "completed", "configured", "approved"].includes(value) ? "good" : ["failed", "unhealthy", "error", "revoked"].includes(value) ? "bad" : ["processing", "publishing", "queued", "scheduled", "uploaded", "transcribed", "analysed"].includes(value) ? "warm" : "neutral"; return <span className={`status ${tone}`}><i/>{value.replaceAll("_", " ")}</span>; }
+export function Empty({ title, detail, action }: { title: string; detail: string; action?: ReactNode }) { return <div className="empty"><span><Inbox size={22}/></span><h3>{title}</h3><p>{detail}</p>{action}</div>; }
+export function Loading({ label = "Loading workspace" }: { label?: string }) { return <div className="loading"><LoaderCircle className="spin" size={20}/>{label}</div>; }
+export function ErrorState({ message, retry }: { message: string; retry?: () => void }) { return <div className="error-state"><AlertTriangle size={20}/><div><strong>Couldn’t load this view</strong><p>{message}</p></div>{retry && <button className="button ghost small" onClick={retry}><RefreshCw size={14}/> Retry</button>}</div>; }
+export function SetupNotice({ items }: { items: Array<{label: string; ok: boolean; optional: boolean}> }) { const missing = items.filter(i => !i.ok); if (!missing.length) return null; return <div className="setup-notice"><div className="setup-icon"><ArrowUpRight size={20}/></div><div><strong>Finish your workspace setup</strong><p>{missing.map(item => item.label).join(", ")} {missing.every(i => i.optional) ? "can be connected when you’re ready." : "need attention."}</p></div><a href="/settings" className="button lime small">Open checklist</a></div>; }
+export function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) { return <button className={`toggle ${checked ? "on" : ""}`} onClick={onChange} role="switch" aria-checked={checked} aria-label={label}><span/></button>; }
+export const formatNumber = (value?: number | null) => value == null ? "—" : Intl.NumberFormat("en", { notation: value >= 10000 ? "compact" : "standard", maximumFractionDigits: 1 }).format(value);
+export const formatDuration = (seconds?: number | null) => seconds == null ? "—" : `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+export const formatDate = (value?: string | null) => value ? new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(value)) : "—";
+export const relativeDate = (value?: string | null) => { if (!value) return "—"; const hours = Math.max(0, (Date.now() - new Date(value).getTime()) / 3_600_000); return hours < 24 ? `${Math.floor(hours)}h ago` : `${Math.floor(hours / 24)}d ago`; };
+export function Checkmark({ ok }: { ok: boolean }) { return ok ? <Check size={15} className="green"/> : <AlertTriangle size={15} className="amber"/>; }
+
