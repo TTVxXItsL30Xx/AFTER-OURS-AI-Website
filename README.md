@@ -53,9 +53,9 @@ docker compose ps
 docker compose logs -f backend worker scheduler
 ```
 
-Open `http://SERVER_IP:3200`. The API documentation is available locally at `http://127.0.0.1:8100/api/docs` on the server.
+Open `http://SERVER_IP:3200`. Browser API requests use the same origin and are proxied by the frontend to the internal backend. The API documentation is also available locally at `http://127.0.0.1:8100/api/docs` on the server.
 
-At minimum, replace `POSTGRES_PASSWORD`. When deploying behind a domain, change `NEXT_PUBLIC_API_URL` to the externally reachable HTTPS API origin and add the frontend origin to `CORS_ORIGINS`, then rebuild the frontend:
+At minimum, replace `POSTGRES_PASSWORD`. The default relative `NEXT_PUBLIC_API_URL=/api/v1` works through the frontend proxy and keeps FastAPI private. If you deliberately expose the API on a separate HTTPS origin, change `NEXT_PUBLIC_API_URL` and add the frontend origin to `CORS_ORIGINS`, then rebuild the frontend:
 
 ```bash
 docker compose up -d --build frontend backend
@@ -71,7 +71,8 @@ Important values:
 | --- | --- |
 | `DATABASE_URL` | SQLAlchemy connection from containers to PostgreSQL |
 | `REDIS_URL` | Celery broker/result Redis URL |
-| `NEXT_PUBLIC_API_URL` | API origin used by the browser; compiled into the frontend build |
+| `NEXT_PUBLIC_API_URL` | Browser API base; `/api/v1` uses the built-in same-origin proxy |
+| `INTERNAL_API_URL` | Backend origin used only by the frontend container proxy |
 | `CORS_ORIGINS` | Comma-separated allowed browser origins |
 | `MEDIA_ROOT` | Shared media root inside backend and worker containers |
 | `UPLOAD_MAX_MB` | Server-enforced maximum upload size |
@@ -285,4 +286,3 @@ docker compose down -v
 - Keep `.env` permissions restricted, rotate platform credentials, patch Docker images, and back up PostgreSQL/media volumes.
 - Apply upload limits at both the reverse proxy and application layers.
 - Imported filenames are sanitised, media endpoints use resolved-path containment, and database/Redis ports remain internal by default.
-

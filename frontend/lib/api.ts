@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8100/api/v1";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 
 export class ApiError extends Error {
   constructor(message: string, public status: number) { super(message); }
@@ -20,4 +20,3 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const apiUrl = (path: string) => `${API_URL}${path}`;
 export const mediaUrl = (path?: string) => path ? apiUrl(`/media/${path.replace(/\\/g, "/").split("/").slice(-2).join("/")}`) : "";
-
