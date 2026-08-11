@@ -1,0 +1,14 @@
+export type UUID = string;
+
+export interface Timestamped { id: UUID; created_at: string; updated_at: string }
+export interface ProcessingJob extends Timestamped { job_type: string; entity_type?: string; entity_id?: UUID; status: string; progress: number; message?: string; error_message?: string }
+export interface DiscoveredVideo extends Timestamped { platform: string; external_id: string; creator_name: string; creator_external_id?: string; title: string; description?: string; thumbnail_url?: string; source_url: string; published_at?: string; duration_seconds?: number; views?: number; likes?: number; comments?: number; views_per_hour?: number; engagement_rate?: number; opportunity_score: number; status: string; saved: boolean; ignored: boolean; authorised_source_id?: UUID }
+export interface Creator extends Timestamped { platform: string; external_id: string; name: string; avatar_url?: string; profile_url?: string; follower_count?: number; monitored: boolean; enabled: boolean; discovery_frequency: string; tags: string[]; notes?: string; source_permission: string; discovery_count?: number }
+export interface Source extends Timestamped { title: string; filename: string; source_type: string; media_path: string; mime_type?: string; duration_seconds?: number; size_bytes: number; ingest_status: string; processing_status: string; permission_status: string; error_message?: string }
+export interface Transcript extends Timestamped { source_id: UUID; provider: string; language: string; status: string; text?: string; segments: Array<{start: number; end: number; text: string}>; error_message?: string }
+export interface Moment extends Timestamped { transcript_id: UUID; start_seconds: number; end_seconds: number; score: number; title: string; hook: string; rationale?: string }
+export interface ClipProject extends Timestamped { source_id: UUID; moment_id?: UUID; title: string; hook_text?: string; start_seconds: number; end_seconds: number; aspect_ratio: string; caption_style: string; subtitles_enabled: boolean; crop_settings: Record<string, unknown>; status: string }
+export interface RenderedClip extends Timestamped { project_id: UUID; file_path?: string; subtitle_path?: string; duration_seconds?: number; size_bytes?: number; width?: number; height?: number; status: string; error_message?: string }
+export interface PublishingJob extends Timestamped { rendered_clip_id: UUID; account_id?: UUID; title: string; caption?: string; target_platforms: string[]; scheduled_at?: string; status: string; retries: number; error_message?: string }
+export interface Publication extends Timestamped { publishing_job_id: UUID; platform: string; account_name?: string; published_at?: string; title: string; caption?: string; external_post_id?: string; external_url?: string; status: string; error_message?: string }
+

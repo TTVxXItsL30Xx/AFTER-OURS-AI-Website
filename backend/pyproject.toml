@@ -1,0 +1,13 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 180
+exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501", "E701", "E702"]
+
