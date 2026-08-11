@@ -1,0 +1,16 @@
+.env
+.DS_Store
+node_modules/
+.pnpm-store/
+.next/
+*.tsbuildinfo
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+media/uploads/*
+media/outputs/*
+!media/uploads/.gitkeep
+!media/outputs/.gitkeep
